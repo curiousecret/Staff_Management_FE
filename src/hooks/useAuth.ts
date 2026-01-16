@@ -8,7 +8,7 @@ interface UseAuthReturn {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (username: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   error: string | null;
 }
 
@@ -48,8 +48,8 @@ export function useAuth(): UseAuthReturn {
   }, [router]);
 
   // Logout function
-  const logout = useCallback(() => {
-    authService.logout();
+  const logout = useCallback(async () => {
+    await authService.logout();
     setIsAuthenticated(false);
     router.push("/login");
   }, [router]);

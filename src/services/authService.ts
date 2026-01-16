@@ -57,9 +57,18 @@ export const authService = {
   },
 
   /**
-   * Logout - clear token
+   * Logout - call backend logout endpoint and clear token
    */
-  logout(): void {
-    this.removeToken();
+  async logout(): Promise<void> {
+    try {
+      // Call backend logout endpoint
+      await api.post("/api/v1/auth/logout");
+    } catch (error) {
+      // Continue with logout even if API call fails
+      console.error("Logout API call failed:", error);
+    } finally {
+      // Always clear token
+      this.removeToken();
+    }
   },
 };

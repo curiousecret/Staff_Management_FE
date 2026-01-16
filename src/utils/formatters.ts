@@ -2,9 +2,9 @@
  * Format salary to 2 decimal places with currency
  */
 export function formatSalary(salary: number): string {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("en-MY", {
     style: "currency",
-    currency: "USD",
+    currency: "MYR",
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(salary);
