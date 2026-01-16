@@ -36,6 +36,7 @@ export function useAuth(): UseAuthReturn {
     try {
       const response = await authService.login(username, password);
       authService.setToken(response.access_token);
+      authService.setRefreshToken(response.refresh_token);
       setIsAuthenticated(true);
       router.push("/staff");
     } catch (err) {

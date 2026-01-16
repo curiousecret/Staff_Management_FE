@@ -1,5 +1,5 @@
 import api from "./api";
-import { LoginResponse } from "@/types";
+import { LoginResponse, RefreshTokenResponse } from "@/types";
 
 export const authService = {
   /**
@@ -22,7 +22,7 @@ export const authService = {
   },
 
   /**
-   * Store token in localStorage
+   * Store access token in localStorage
    */
   setToken(token: string): void {
     if (typeof window !== "undefined") {
@@ -31,7 +31,7 @@ export const authService = {
   },
 
   /**
-   * Get token from localStorage
+   * Get access token from localStorage
    */
   getToken(): string | null {
     if (typeof window !== "undefined") {
@@ -41,11 +41,39 @@ export const authService = {
   },
 
   /**
-   * Remove token from localStorage
+   * Remove access token from localStorage
    */
   removeToken(): void {
     if (typeof window !== "undefined") {
       localStorage.removeItem("access_token");
+    }
+  },
+
+  /**
+   * Store refresh token in localStorage
+   */
+  setRefreshToken(token: string): void {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("refresh_token", token);
+    }
+  },
+
+  /**
+   * Get refresh token from localStorage
+   */
+  getRefreshToken(): string | null {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("refresh_token");
+    }
+    return null;
+  },
+
+  /**
+   * Remove refresh token from localStorage
+   */
+  removeRefreshToken(): void {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("refresh_token");
     }
   },
 
@@ -57,7 +85,28 @@ export const authService = {
   },
 
   /**
-   * Logout - call backend logout endpoint and clear token
+   * Refresh access token using refresh token
+   */
+  async refreshToken(): Promise<string> {
+    const refreshToken = this.getRefreshToken();
+
+    if (!refreshToken) {
+      throw new Error("No refresh token available");
+    }
+
+    const response = await api.post<RefreshTokenResponse>(
+      "/api/v1/auth/refresh",
+      { refresh_token: refreshToken }
+    );
+
+    const newAccessToken = response.data.access_token;
+    this.setToken(newAccessToken);
+
+    return newAccessToken;
+  },
+
+  /**
+   * Logout - call backend logout endpoint and clear tokens
    */
   async logout(): Promise<void> {
     try {
@@ -67,8 +116,9 @@ export const authService = {
       // Continue with logout even if API call fails
       console.error("Logout API call failed:", error);
     } finally {
-      // Always clear token
+      // Always clear both tokens
       this.removeToken();
+      this.removeRefreshToken();
     }
   },
 };
