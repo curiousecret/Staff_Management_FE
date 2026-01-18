@@ -73,30 +73,11 @@ pnpm dev
 
 The application will be available at [http://localhost:3000](http://localhost:3000)
 
-### Production Build
-
-```bash
-# Build the application
-npm run build
-
-# Start the production server
-npm start
-```
-
-### Linting
-
-```bash
-npm run lint
-```
-
 ## Available Scripts
 
-| Script          | Description                           |
-| --------------- | ------------------------------------- |
-| `npm run dev`   | Starts the development server         |
-| `npm run build` | Creates an optimized production build |
-| `npm start`     | Starts the production server          |
-| `npm run lint`  | Runs ESLint to check code quality     |
+| Script        | Description                   |
+| ------------- | ----------------------------- |
+| `npm run dev` | Starts the development server |
 
 ## Project Structure
 
